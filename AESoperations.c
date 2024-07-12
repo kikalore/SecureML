@@ -55,12 +55,12 @@ void AES256_decryptMatrix_ECB(uint8_t *encryptedMatrixFRAM,
     size_t paddedEncryptedSize = encryptedSize;
 
     //print tile to decrypt
-    printf("Encrypted input:\t");
-    for (i = 0; i < encryptedSize; i++)
-    {
-        printf("%d ", encryptedMatrixFRAM[i]);
-    }
-    printf("\n");
+    // printf("Encrypted input:\t");
+    // for (i = 0; i < encryptedSize; i++)
+    // {
+    //     printf("%d ", encryptedMatrixFRAM[i]);
+    // }
+    // printf("\n");
 
     // Iterate over the encrypted matrix in 16-byte blocks
     for (i = 0; i < encryptedSize; i += BLOCK_SIZE)
@@ -69,22 +69,22 @@ void AES256_decryptMatrix_ECB(uint8_t *encryptedMatrixFRAM,
         if (i + BLOCK_SIZE <= encryptedSize)
         {
             memcpy(block, encryptedMatrixFRAM + i, BLOCK_SIZE);
-            printf("Block to decrypt:\t");
-            for (j = 0; j < BLOCK_SIZE; j++)
-            {
-                printf("%d ", block[j]);
-            }
-            printf("\n");
+            // printf("Block to decrypt:\t");
+            // for (j = 0; j < BLOCK_SIZE; j++)
+            // {
+            //     printf("%d ", block[j]);
+            // }
+            // printf("\n");
         }
 
         // Decrypt the block
         decryptAndStoreInSRAM(block, decryptedBlock, cipherkey);
-        printf("Decrypted block:\t");
-        for (j = 0; j < BLOCK_SIZE; j++)
-        {
-            printf("%d ", decryptedBlock[j]);
-        }
-        printf("\n");
+        // printf("Decrypted block:\t");
+        // for (j = 0; j < BLOCK_SIZE; j++)
+        // {
+        //     printf("%d ", decryptedBlock[j]);
+        // }
+        // printf("\n");
         // Copy the decrypted block into the decrypted matrix
         // Be careful to not overwrite the buffer if it's not a multiple of 16
         size_t copySize =
@@ -100,8 +100,7 @@ encryptedMatrix AES256_encryptMatrix_ECB(uint8_t *matrix,
     encryptedMatrix encryptedMatrix;
     encryptedMatrix.matrixRows = ROUND_UP_TO_MULTIPLE_OF_4(matrixRows);
     encryptedMatrix.matrixCols = ROUND_UP_TO_MULTIPLE_OF_4(matrixCols);
-    encryptedMatrix.encryptedSize = encryptedMatrix.matrixRows
-            * encryptedMatrix.matrixCols;
+    encryptedMatrix.encryptedSize = encryptedMatrix.matrixRows * encryptedMatrix.matrixCols;
     printf("Encrypted matrix size: %d\n", encryptedMatrix.encryptedSize);
     encryptedMatrix.matrix = (uint8_t*) malloc(
             encryptedMatrix.matrixRows * encryptedMatrix.matrixCols);
@@ -155,27 +154,27 @@ encryptedMatrix AES256_encryptMatrix_ECB(uint8_t *matrix,
                 }
             }
             // Print the block
-            printf("Block starting at (%d, %d):\n", row, col);
-            for (blockRow = 0; blockRow < BLOCK_ROWS; ++blockRow)
-            {
-                for (blockCol = 0; blockCol < BLOCK_COLS; ++blockCol)
-                {
-                    printf("%d ", block[blockRow * BLOCK_COLS + blockCol]);
-                }
-                //print encrypted block
-                printf("\t\t");
-                for (blockCol = 0; blockCol < BLOCK_COLS; ++blockCol)
-                {
-                    printf("%d ",
-                           encryptedBlock[blockRow * BLOCK_COLS + blockCol]);
-                }
-                printf("\n");
-            }
-            printf("\n");
+            // printf("Block starting at (%d, %d):\n", row, col);
+            // for (blockRow = 0; blockRow < BLOCK_ROWS; ++blockRow)
+            // {
+            //     for (blockCol = 0; blockCol < BLOCK_COLS; ++blockCol)
+            //     {
+            //         printf("%d ", block[blockRow * BLOCK_COLS + blockCol]);
+            //     }
+            //     //print encrypted block
+            //     printf("\t\t");
+            //     for (blockCol = 0; blockCol < BLOCK_COLS; ++blockCol)
+            //     {
+            //         printf("%d ",
+            //                encryptedBlock[blockRow * BLOCK_COLS + blockCol]);
+            //     }
+            //     printf("\n");
+            // }
+            // printf("\n");
         }
     }
-    printf("Encrypted matrix:\n");
-    Print_Matrix(encryptedMatrix.matrix, encryptedMatrix.matrixRows,
-                 encryptedMatrix.matrixCols);
+    // printf("Encrypted matrix:\n");
+    // Print_Matrix(encryptedMatrix.matrix, encryptedMatrix.matrixRows,
+    //              encryptedMatrix.matrixCols);
     return encryptedMatrix;
 }

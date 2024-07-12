@@ -11,5 +11,5 @@ void Basic_Multiplication(uint8_t I[I_R][I_C], uint8_t W[I_C][W_C],
 void Tiled_Multiplication(uint8_t I[I_R][I_C], uint8_t W[I_C][W_C],
                           uint8_t O[I_R][W_C]);
 
-void Tiled_Decryption_Multiplication(encryptedMatrix I_encrypted, encryptedMatrix W_encrypted, uint8_t *O);
+encryptedMatrix Tiled_Decryption_Multiplication(encryptedMatrix I_encrypted, encryptedMatrix W_encrypted, uint8_t *O);
 #endif
