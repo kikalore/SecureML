@@ -1,7 +1,7 @@
 #include "driverlib.h"
 #include "AESoperations.h"
 
-extern uint8_t cipherkey[];
+extern uint16_t cipherkey[];
 
 void generateRandomKey(uint16_t *cipherKey)
 {
@@ -101,12 +101,12 @@ encryptedMatrix AES256_encryptMatrix_ECB(uint8_t *matrix,
     encryptedMatrix.matrixRows = ROUND_UP_TO_MULTIPLE_OF_4(matrixRows);
     encryptedMatrix.matrixCols = ROUND_UP_TO_MULTIPLE_OF_4(matrixCols);
     encryptedMatrix.encryptedSize = encryptedMatrix.matrixRows * encryptedMatrix.matrixCols;
-    printf("Encrypted matrix size: %d\n", encryptedMatrix.encryptedSize);
+    //printf("Encrypted matrix size: %d\n", encryptedMatrix.encryptedSize);
     encryptedMatrix.matrix = (uint8_t*) malloc(
             encryptedMatrix.matrixRows * encryptedMatrix.matrixCols);
     if (encryptedMatrix.matrix == NULL)
     {
-        printf("Memory allocation failed\n");
+        //printf("Memory allocation failed\n");
         return encryptedMatrix;
     }
 

@@ -4,7 +4,7 @@
 #include "matrix_multiplication.h"
 #include "AESoperations.h"
 
-extern uint8_t cipherkey[];
+extern uint16_t cipherkey[];
 
 void Basic_Multiplication(uint8_t I[I_R][I_C], uint8_t W[I_C][W_C],
                           uint8_t O[I_R][W_C])
@@ -190,19 +190,19 @@ encryptedMatrix Tiled_Decryption_Multiplication(encryptedMatrix I_encrypted, enc
                     if (outputRow < I_encrypted.matrixRows)
                     {
                         memcpy(output_row, &O[outputRow * W_encrypted.matrixCols], W_encrypted.matrixCols * sizeof(uint8_t));
-                        printf("Output row %d: ", outputRow);
+                        //printf("Output row %d: ", outputRow);
                         for (j = 0; j < W_encrypted.matrixCols; ++j)
                         {
-                            printf("%d ", output_row[j]);
+                            //printf("%d ", output_row[j]);
                         }
-                        printf("\n");
+                        //printf("\n");
                     }
                 }
             }
         }
     }
-    printf("Output matrix is:\n");
-    Print_Matrix(O, I_encrypted.matrixRows, W_encrypted.matrixCols);
+    // printf("Output matrix is:\n");
+    // Print_Matrix(O, I_encrypted.matrixRows, W_encrypted.matrixCols);
     O_encrypted = AES256_encryptMatrix_ECB(O, O_encrypted.matrix, I_encrypted.matrixRows, W_encrypted.matrixCols);
     return O_encrypted;
 }
