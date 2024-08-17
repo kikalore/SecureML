@@ -25,21 +25,27 @@ void setup_timerB()
     //setup timer
     TB0CTL |= TBCLR; //reset timer
     TB0CTL |= TBSSEL__ACLK; //clock source ACLK
-    TB0CTL |= MC__CONTINUOUS;
+    //TB0CTL |= MC__CONTINUOUS;
+    TB0CTL |= MC__UP;              // Up mode, count to TB0CCR0
+    TB0CCR0 = 1638;                // Set timer period for 0.05 seconds
+
     //Setup TB0 overflow IRQ
-    TB0CTL |= TBIE;
+    //TB0CTL |= TBIE;
+    TB0CCTL0 |= CCIE;              // Enable interrupt for CCR0
+
+
     __enable_interrupt();
     TB0CTL &= ~TBIFG;
 }
 
-// Interrupt service routine for Timer B overflow
-#pragma vector=TIMER0_B1_VECTOR
-__interrupt void ISR_TB0_Overflow(void)
+
+// Interrupt service routine for Timer B CCR0
+#pragma vector = TIMER0_B0_VECTOR
+__interrupt void ISR_TB0_CCR0(void)
 {
-    P1OUT ^= BIT0;
-    printf("overflow\n");
-    overflow_counter++;
-    TB0CTL &= ~TBIFG;
+    P1OUT ^= BIT0;                 // Toggle LED
+//    printf("overflow\n");          // Print overflow message
+    overflow_counter++;            // Increment overflow counter
 }
 int main(void)
 {
@@ -50,10 +56,8 @@ int main(void)
     unsigned int start_time = TB0R;
     printf("Start time: %d\n", start_time);
 
-    // Simulation of work (like encryption, decryption, etc.)
-    // volatile unsigned long i ;
-    // for (i= 0; i < 1000000; i++);
-    //     //generateRandomKey(cipherkey);
+
+    generateRandomKey(cipherkey);
 
 // // //TESTING TILED MULTIPLICATION
     printf("*******TESTING TILED MULTIPLICATION*******\n");
@@ -84,39 +88,31 @@ int main(void)
 
     O_encrypted_ECB = Tiled_Decryption_Multiplication(I_encrypted_ECB,
                                                       W_encrypted_ECB, Otest);
+
     //printf("Correct output matrix is:\n");
     //Print_Matrix(O, I_R, W_C);
 
-    printf("Output matrix encrypted is:\n");
+    //printf("Output matrix encrypted is:\n");
     //Print_Matrix(O_encrypted_ECB.matrix, O_encrypted_ECB.matrixRows, O_encrypted_ECB.matrixCols);
     decryptAndStoreInSRAM(O_encrypted_ECB.matrix, Otest, cipherkey);
+    
+    printf("Number of overflow: %d\n", overflow_counter);
 
     unsigned int end_time = TB0R;
     printf("End time: %d\n", end_time);
 
     unsigned int elapsed_time;
-    if (end_time >= start_time)
-    {
-        // No overflow
-        elapsed_time = end_time - start_time;
-    }
-    else
-    {
-        // Overflow has occurred
-        elapsed_time = (0xFFFF - start_time) + end_time + 1;
-    }
-
+    elapsed_time = end_time - start_time;
     printf("Elapsed time: %u\n", elapsed_time);
 
     // Calculate total ticks
-    unsigned long total_ticks = ((unsigned long)overflow_counter * 65536UL) + elapsed_time;
+    unsigned long total_ticks = ((unsigned long)overflow_counter * TB0CCR0) + elapsed_time;
+    printf("Total ticks: %lu\n", total_ticks);
 
     // Convert ticks to seconds
-    float time_in_seconds = (float)total_ticks / 32768.0;
-
-    printf("Number of overflow: %d\n", overflow_counter);
-    printf("Total ticks: %lu\n", total_ticks);
+    float time_in_seconds = ((float)total_ticks / 32768.0);
     printf("Total time: %f seconds\n", time_in_seconds);
+
     free(I_encrypted_ECB.matrix);
     free(W_encrypted_ECB.matrix);
     free(O_encrypted_ECB.matrix);

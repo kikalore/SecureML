@@ -3,6 +3,7 @@
 #include <math.h>
 #include "matrix_multiplication.h"
 #include "AESoperations.h"
+extern volatile unsigned int overflow_counter;
 
 extern uint16_t cipherkey[];
 
@@ -94,7 +95,10 @@ void Tiled_Multiplication(uint8_t I[I_R][I_C], uint8_t W[I_C][W_C],
 
 encryptedMatrix Tiled_Decryption_Multiplication(encryptedMatrix I_encrypted, encryptedMatrix W_encrypted,
                       uint8_t *O)
-{
+{    volatile unsigned int overflow_counter_prima = overflow_counter;
+
+    unsigned int start_time = TB0R;
+    printf("Start time of Matrix multiplication: %d\n", start_time);
 
     // Temporary storage for decrypted tiles
     uint8_t I_decrypted_tile[TILE_SIZE];
@@ -204,6 +208,26 @@ encryptedMatrix Tiled_Decryption_Multiplication(encryptedMatrix I_encrypted, enc
     // printf("Output matrix is:\n");
     // Print_Matrix(O, I_encrypted.matrixRows, W_encrypted.matrixCols);
     O_encrypted = AES256_encryptMatrix_ECB(O, O_encrypted.matrix, I_encrypted.matrixRows, W_encrypted.matrixCols);
+    
+    volatile unsigned int overflow_counter_dopo = overflow_counter;
+    volatile unsigned int overflow_counter_diff = overflow_counter_dopo - overflow_counter_prima;
+    printf("Number of overflow of Matrix multiplication: %d\n", overflow_counter_diff);
+
+    unsigned int end_time = TB0R;
+    printf("End time of Matrix multiplication: %d\n", end_time);
+
+    unsigned int elapsed_time;
+    elapsed_time = end_time + (TB0CCR0-start_time);
+    printf("Elapsed time of Matrix multiplication: %u\n", elapsed_time);
+
+    // Calculate total ticks
+    unsigned long total_ticks = ((unsigned long)overflow_counter_diff * TB0CCR0) + elapsed_time;
+    printf("Total ticks of Matrix multiplication: %lu\n", total_ticks);
+
+    // Convert ticks to seconds
+    float time_in_seconds = ((float)total_ticks / 32768.0);
+    printf("Total time of Matrix multiplication: %f seconds\n", time_in_seconds);
+
     return O_encrypted;
 }
 
