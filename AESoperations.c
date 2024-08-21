@@ -3,32 +3,32 @@
 
 extern uint16_t cipherkey[];
 
-void generateRandomKey(uint16_t *cipherKey)
-{
-    // Configure MPU with INFO memory as RW
-    MPUCTL0 = MPUPW;
-    MPUSAM |= MPUSEGIRE | MPUSEGIWE;
-    MPUCTL0 = MPUPW | MPUENA;
-    uint8_t len;
-    len = rng_generateBytes(cipherKey, LENGTH);
-    //check length correctness
-    if (len != LENGTH)
-    {
-        printf("Error generating bytes\n");
-        __no_operation();
-    }
-    else
-    {
-        printf("Key of %d bytes generated successfully\n", len);
-        printf("Generated key is: ");
-        int i;
-        for (i = 0; i < LENGTH; ++i)
-        {
-            printf("%d", cipherKey[i]);
-        }
-        printf("\n");
-    }
-}
+//void generateRandomKey(uint16_t *cipherKey)
+//{
+//    // Configure MPU with INFO memory as RW
+//    MPUCTL0 = MPUPW;
+//    MPUSAM |= MPUSEGIRE | MPUSEGIWE;
+//    MPUCTL0 = MPUPW | MPUENA;
+//    uint8_t len;
+//    len = rng_generateBytes(cipherKey, LENGTH);
+//    //check length correctness
+//    if (len != LENGTH)
+//    {
+////        printf("Error generating bytes\n");
+//        __no_operation();
+//    }
+//    else
+//    {
+////        printf("Key of %d bytes generated successfully\n", len);
+////        printf("Generated key is: ");
+//        int i;
+//        for (i = 0; i < LENGTH; ++i)
+//        {
+////            printf("%d", cipherKey[i]);
+//        }
+////        printf("\n");
+//    }
+//}
 
 void encryptAndStoreInFRAM(const uint8_t *matrix,
                            uint8_t *encryptedMatrixFRAMFRAM,

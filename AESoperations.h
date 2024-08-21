@@ -10,7 +10,7 @@
 #include "rng.h"
 #include "constants.h"
 
-void generateRandomKey(uint16_t *cipherKey);
+//void generateRandomKey(uint16_t *cipherKey);
 
 void encryptAndStoreInFRAM(const uint8_t *matrix, uint8_t *encryptedMatrixFRAM,
                            uint16_t *cipherKey);
